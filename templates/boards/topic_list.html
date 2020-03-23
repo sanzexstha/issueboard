@@ -11,14 +11,13 @@
 
 
 {% block content %}
-<div class="mb-4">
-    <a href="{% url 'NewTopic' board.pk %}" class="btn btn-primary">New topic</a>
+<div>
+    <a href="{% url 'NewIssue' board.pk %}" class="btn btn-success float-right">Add Issue</a>
 </div>
-
 <table class="table">
     <thead class="thead-dark">
         <tr>
-            <th>Topic</th>
+            <th>Issues</th>
             <th>Posted by</th>
             <th>Replies</th>
             <th>Views</th>
@@ -37,4 +36,5 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% endblock content %}

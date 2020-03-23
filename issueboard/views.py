@@ -4,14 +4,14 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, FormView, UpdateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import TopicCreateForm, PostCreateForm
-from .models import Board, Topic, Post
+from .forms import TopicCreateForm, PostCreateForm, BoardCreateForm
+from .models import Board, Issue, Post
 
 
 class BoardListView(ListView):
     template_name = "boards/board_list.html"
     model = Board
-    paginate_by = 8
+   
 
 
 class TopicListView(ListView):
@@ -24,8 +24,21 @@ class TopicListView(ListView):
         return context
 
     def get_queryset(self):
-        queryset = Topic.objects.filter(board__id=self.kwargs['pk'])
+        queryset = Issue.objects.filter(board__id=self.kwargs['pk'])
         return queryset
+
+class BoardCreateView(FormView):
+    form_class = BoardCreateForm
+    template_name = "boards/new_board.html"
+
+    def form_valid(self, form):
+        name = form.cleaned_data.get('name')
+        description = form.cleaned_data.get('description')
+        new_board = Board.objects.create(
+            name=name, description=description)
+        return redirect('BoardList')
+
+
 
 
 class TopicCreateView(FormView):
@@ -36,7 +49,7 @@ class TopicCreateView(FormView):
         topic = form.cleaned_data.get('topic')
         message = form.cleaned_data.get('message')
         board = get_object_or_404(Board, pk=self.kwargs['pk'])
-        new_topic = Topic.objects.create(
+        new_topic = Issue.objects.create(
             subject=topic, board=board, starter=self.request.user)
         new_post = Post.objects.create(
             message=message, topic=new_topic, created_by=self.request.user)
@@ -50,23 +63,16 @@ class TopicCreateView(FormView):
 
 
 class TopicPostsView(DetailView):
-    model = Topic
+    model = Issue
     template_name = "boards/topic_posts.html"
 
     def get_object(self):
         self.topic = get_object_or_404(
-            Topic, board__pk=self.kwargs['pk'], pk=self.kwargs['topic_pk'])
+            Issue, board__pk=self.kwargs['pk'], pk=self.kwargs['topic_pk'])
         
         return self.topic
 
-    def get_context_data(self, **kwargs):
-        session_key = 'viewed_topic_{}'.format(self.topic.pk)   
-        if not self.request.session.get(session_key, False):
-            self.topic.views += 1
-            self.topic.save()
-            self.request.session[session_key] = True           
-        return super().get_context_data(**kwargs)
-
+ 
 
 class PostUpdateView(UpdateView):
     model = Post
@@ -82,5 +88,19 @@ class PostUpdateView(UpdateView):
         post.save()
         return redirect('TopicPosts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
 
+class PostReplyView(CreateView):
+    template_name = "boards/reply_issue.html"
+    form_class = PostCreateForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['topic'] = get_object_or_404(Issue, pk=self.kwargs['topic_pk'])
+        return context
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.topic = get_object_or_404(
+            Issue, pk=self.kwargs['topic_pk'])
+        instance.created_by = self.request.user
+        return super().form_valid(form)
  

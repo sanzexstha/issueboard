@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}New Topic | {{ block.super }}{% endblock %}
+{% block title %}New Issue | {{ block.super }}{% endblock %}
 
 {% block breadcrumb %}
 <ol class="breadcrumb my-4">
     <li class="breadcrumb-item"><a href="{% url 'BoardList' %}">Boards</a></li>
     <li class="breadcrumb-item"><a href="{% url 'TopicList' board.id %}">{{ board.name }}</a></li>
-    <li class="breadcrumb-item active">New topic</li>
+    <li class="breadcrumb-item active">New Issue</li>
 </ol>
 {% endblock %}
 

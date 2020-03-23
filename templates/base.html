@@ -15,23 +15,26 @@
 </head>
 
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'BoardList' %}">Issue Board</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu"
+                <a class="navbar-brand" href="{% url 'BoardList' %}">Issue Board</a>
+            <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu"
                 aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainMenu">
+            </button> -->
+                <div class="collapse navbar-collapse" id="mainMenu">
                 
             </div>
         </div>
     </nav>
-
+</div>
+ 
     <div class="container">
         {% block breadcrumb %}{% endblock breadcrumb %}
 
         {% block content %}
+        
         {% endblock content %}
     </div>
 

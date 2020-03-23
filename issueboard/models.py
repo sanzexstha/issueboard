@@ -10,15 +10,21 @@ class Board(models.Model):
     def __str__(self):
         return self.name
 
+    def get_posts_count(self):
+        return Post.objects.filter(topic__board=self).count()
+        
+    def get_topic_count(self):
+        return Issue.objects.filter(board=self).count()
+
     def get_last_post(self):
         return Post.objects.filter(topic__board=self).order_by('-created_at').first()
 
 
-class Topic(models.Model):
+class Issue(models.Model):
     subject = models.CharField(max_length=255)
     last_update = models.DateTimeField(auto_now=True)
-    board = models.ForeignKey(Board, related_name='topics', on_delete=models.CASCADE)
-    starter = models.ForeignKey(User, related_name='topics', on_delete=models.CASCADE)
+    board = models.ForeignKey(Board, related_name='issues', on_delete=models.CASCADE)
+    starter = models.ForeignKey(User, related_name='issues', on_delete=models.CASCADE)
     views = models.PositiveIntegerField(default=0)
 
     def __str__(self):
@@ -27,7 +33,7 @@ class Topic(models.Model):
 
 class Post(models.Model):
     message = models.TextField(max_length=4000)
-    topic = models.ForeignKey(Topic, related_name='posts', on_delete=models.CASCADE)
+    topic = models.ForeignKey(Issue, related_name='posts', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)

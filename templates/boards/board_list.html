@@ -10,12 +10,15 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+<div class="mb-4">
+    <a href="{% url 'BoardCreate' %}" class="btn btn-primary">Add Board</a>
+</div>
 <table class="table">
     <thead class="thead-dark">
         <tr>
             <th>Board</th>
+            <th>Issues</th>
             <th>Posts</th>
-            <th>Topics</th>
             <th>Last Post</th>
         </tr>
     </thead>
