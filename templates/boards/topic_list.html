@@ -19,7 +19,7 @@
     <thead class="thead-dark">
         <tr>
             <th>Topic</th>
-            <th>Starter</th>
+            <th>Posted by</th>
             <th>Replies</th>
             <th>Views</th>
             <th>Last Update</th>
@@ -27,7 +27,7 @@
     </thead>
     <tbody>
         {% for topic in object_list %}
-        <tr>
+        <tr>    
             <td><a href="{% url 'TopicPosts' pk=board.id topic_pk=topic.id %}">{{ topic.subject }}</a></td>
             <td>{{ topic.starter.username }}</td>
             <td>{{ topic.get_reply_count }}</td>
@@ -37,5 +37,4 @@
         {% endfor %}
     </tbody>
 </table>
-{% include 'pagination.html' %}
 {% endblock content %}

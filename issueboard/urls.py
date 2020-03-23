@@ -9,6 +9,5 @@ urlpatterns = [
          views.TopicPostsView.as_view(), name="TopicPosts"),
     path('boards/<int:pk>/topics/<int:topic_pk>/edit/<int:post_pk>/',
          views.PostUpdateView.as_view(), name="PostUpdate"),
-    path('boards/<int:pk>/topics/<int:topic_pk>/reply/',
-         views.PostReplyView.as_view(), name="PostReply"),
+ 
 ]

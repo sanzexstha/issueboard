@@ -83,21 +83,4 @@ class PostUpdateView(UpdateView):
         return redirect('TopicPosts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
 
 
-class PostReplyView(CreateView):
-    template_name = "boards/reply_topic.html"
-    form_class = PostCreateForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['topic'] = get_object_or_404(Topic, pk=self.kwargs['topic_pk'])
-        return context
-
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.topic = get_object_or_404(
-            Topic, pk=self.kwargs['topic_pk'])
-        instance.created_by = self.request.user
-        return super().form_valid(form)
-
-    def get_success_url(self, **kwargs):
-        return reverse_lazy('TopicPosts', kwargs={'pk': self.kwargs['pk'], 'topic_pk': self.kwargs['topic_pk']})
+ 
