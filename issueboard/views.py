@@ -28,7 +28,7 @@ class TopicListView(ListView):
         return queryset
 
 
-class TopicCreateView( FormView):
+class TopicCreateView(FormView):
     form_class = TopicCreateForm
     template_name = "boards/new_topic.html"
 
