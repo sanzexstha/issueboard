@@ -10,6 +10,8 @@ urlpatterns = [
          views.IssuePostsView.as_view(), name="IssuePosts"),
    path('boards/<int:pk>/issues/<int:issue_pk>/edit/<int:post_pk>/',
          views.PostUpdateView.as_view(), name="PostUpdate"),
+    path('boards/<int:pk>/issues/<int:issue_pk>/edit/',
+         views.IssueUpdateView.as_view(), name="IssueUpdate"),
     path('boards/<int:pk>/issues/<int:issue_pk>/reply/',
          views.PostReplyView.as_view(), name="PostReply"),
     path('boards/<int:pk>/issues/<int:issue_pk>/delete',

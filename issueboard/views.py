@@ -11,11 +11,6 @@ from .models import Board, Issue, Post
 class BoardListView(ListView):
     template_name = "boards/board_list.html"
     model = Board
-
-# class ReplyDelView(DeleteView):     
-#     model = Post
-#     template_name = "boards/reply_confirm_delete.html"
-#     success_url = reverse_lazy('IssuePost')
  
 
 class IssueListView(ListView):
@@ -50,11 +45,11 @@ class IssueCreateView(FormView):
     template_name = "boards/new_issue.html"
 
     def form_valid(self, form):
-        issue = form.cleaned_data.get('issue')
+        issue = form.cleaned_data.get('subject')
         message = form.cleaned_data.get('message')
         board = get_object_or_404(Board, pk=self.kwargs['pk'])
         new_topic = Issue.objects.create(
-            subject=issue, board=board, starter=self.request.user)
+            subject=issue,  message=message, board=board, starter=self.request.user)
         new_post = Post.objects.create(
             message=message, issue=new_topic, created_by=self.request.user)
         return redirect('IssueList', self.kwargs['pk'])
@@ -95,12 +90,32 @@ class IssueDelView(DeleteView):
     def get_success_url(self, **kwargs):     
         return reverse_lazy('IssueList', kwargs={'pk': self.kwargs['pk']})
 
+class IssueUpdateView(UpdateView):
+    model = Issue
+    form_class = IssueCreateForm
+    pk_url_kwarg = 'issue_pk'
+    template_name = "boards/update_issue.html"
+
+
+    def form_valid(self, form):
+        issue = form.save(commit=False)
+        issue.updated_by = self.request.user
+        issue.updated_at = timezone.now()
+        issue.save()
+        return redirect('IssuePosts', pk= issue.board.pk, issue_pk= issue.pk)
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('IssuePosts', kwargs={'pk': self.kwargs['pk'], 'issue_pk': self.kwargs['issue_pk']})
+
+
+
 class PostUpdateView(UpdateView):
     model = Post
-    fields = ['message']
+    form_class = PostCreateForm
     pk_url_kwarg = 'post_pk'
-    context_object_name = 'post'
     template_name = "boards/update_posts.html"
+
+
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -116,6 +131,7 @@ class PostReplyView(CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['issue'] = get_object_or_404(Issue, pk=self.kwargs['issue_pk'])
+        print(context)
         return context
 
     def form_valid(self, form):

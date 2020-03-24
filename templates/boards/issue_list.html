@@ -11,16 +11,17 @@
 
 
 {% block content %}
-<div>
-    <a href="{% url 'NewIssue' board.pk %}" class="btn btn-success float-right">Add Issue</a>
+
+<div class="float-right mb-2">  
+ <a href="{% url 'NewIssue' board.pk %}" class="btn btn-success ">Add Issue</a>
 </div>
-<table class="table">
+<table class="table ">
     <thead class="thead-dark">
         <tr>
             <th>Issues</th>
             <th>Posted by</th>
             <th>Replies</th>
-          </tr>
+        </tr>
     </thead>
     <tbody>
         {% for issue in object_list %}
@@ -34,5 +35,5 @@
         {% endfor %}
     </tbody>
 </table>
-</div>
+
 {% endblock content %}
