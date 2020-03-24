@@ -11,13 +11,13 @@ class Board(models.Model):
         return self.name
 
     def get_posts_count(self):
-        return Post.objects.filter(topic__board=self).count()
+        return Post.objects.filter(issue__board=self).count()
         
     def get_topic_count(self):
         return Issue.objects.filter(board=self).count()
 
     def get_last_post(self):
-        return Post.objects.filter(topic__board=self).order_by('-created_at').first()
+        return Post.objects.filter(issue__board=self).order_by('-created_at').first()
 
 
 class Issue(models.Model):
@@ -33,7 +33,7 @@ class Issue(models.Model):
 
 class Post(models.Model):
     message = models.TextField(max_length=4000)
-    topic = models.ForeignKey(Issue, related_name='posts', on_delete=models.CASCADE)
+    issue = models.ForeignKey(Issue, related_name='posts', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, related_name='posts', on_delete=models.CASCADE)

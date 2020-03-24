@@ -3,7 +3,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, FormView, UpdateView, CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import TopicCreateForm, PostCreateForm, BoardCreateForm
 from .models import Board, Issue, Post
 
@@ -16,7 +15,7 @@ class BoardListView(ListView):
 
 class TopicListView(ListView):
     template_name = "boards/topic_list.html"
-    paginate_by = 8
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,13 +45,13 @@ class TopicCreateView(FormView):
     template_name = "boards/new_topic.html"
 
     def form_valid(self, form):
-        topic = form.cleaned_data.get('topic')
+        issue = form.cleaned_data.get('issue')
         message = form.cleaned_data.get('message')
         board = get_object_or_404(Board, pk=self.kwargs['pk'])
         new_topic = Issue.objects.create(
-            subject=topic, board=board, starter=self.request.user)
+            subject=issue, board=board, starter=self.request.user)
         new_post = Post.objects.create(
-            message=message, topic=new_topic, created_by=self.request.user)
+            message=message, issue=new_topic, created_by=self.request.user)
 
         return redirect('TopicList', self.kwargs['pk'])
 
@@ -67,10 +66,10 @@ class TopicPostsView(DetailView):
     template_name = "boards/topic_posts.html"
 
     def get_object(self):
-        self.topic = get_object_or_404(
-            Issue, board__pk=self.kwargs['pk'], pk=self.kwargs['topic_pk'])
+        self.issue = get_object_or_404(
+            Issue, board__pk=self.kwargs['pk'], pk=self.kwargs['issue_pk'])
         
-        return self.topic
+        return self.issue
 
  
 
@@ -86,7 +85,7 @@ class PostUpdateView(UpdateView):
         post.updated_by = self.request.user
         post.updated_at = timezone.now()
         post.save()
-        return redirect('TopicPosts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
+        return redirect('TopicPosts', pk=post.issue.board.pk, issue_pk=post.issue.pk)
 
 class PostReplyView(CreateView):
     template_name = "boards/reply_issue.html"
@@ -94,13 +93,16 @@ class PostReplyView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['topic'] = get_object_or_404(Issue, pk=self.kwargs['topic_pk'])
+        context['issue'] = get_object_or_404(Issue, pk=self.kwargs['issue_pk'])
         return context
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        instance.topic = get_object_or_404(
-            Issue, pk=self.kwargs['topic_pk'])
+        instance.issue = get_object_or_404(
+            Issue, pk=self.kwargs['issue_pk'])
         instance.created_by = self.request.user
         return super().form_valid(form)
- 
+
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('TopicPosts', kwargs={'pk': self.kwargs['pk'], 'issue_pk': self.kwargs['issue_pk']})

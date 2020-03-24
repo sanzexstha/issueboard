@@ -25,13 +25,13 @@
         </tr>
     </thead>
     <tbody>
-        {% for topic in object_list %}
+        {% for issue in object_list %}
         <tr>    
-            <td><a href="{% url 'TopicPosts' pk=board.id topic_pk=topic.id %}">{{ topic.subject }}</a></td>
-            <td>{{ topic.starter.username }}</td>
-            <td>{{ topic.get_reply_count }}</td>
-            <td>{{ topic.views }}</td>
-            <td>{{ topic.last_updated }}</td>
+            <td><a href="{% url 'TopicPosts' pk=board.id issue_pk=issue.id %}">{{ issue.subject }}</a></td>
+            <td>{{ issue.starter.username }}</td>
+            <td>{{ issue.get_reply_count }}</td>
+            <td>{{ issue.views }}</td>
+            <td>{{ issue.last_updated }}</td>
         </tr>
         {% endfor %}
     </tbody>
