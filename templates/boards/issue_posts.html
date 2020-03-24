@@ -5,7 +5,7 @@
 {% block breadcrumb %}
 <ol class="breadcrumb my-4">
     <li class="breadcrumb-item"><a href="{% url 'BoardList' %}">Boards</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'TopicList' object.board.pk %}">{{ object.board.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'IssueList' object.board.pk %}">{{ object.board.name }}</a></li>
     <li class="breadcrumb-item active">{{ object.subject }}</li>
 </ol>
 {% endblock %}
@@ -28,18 +28,23 @@
                     </div>
                     <div class="col-6 text-right">
                         <small class="text-muted">{{ post.updated_at }}</small>
+                      
                         <a href="{% url 'PostUpdate' post.issue.board.pk post.issue.pk post.pk %}"
-                        class="btn btn-primary btn-sm float" role="button">Edit</a>
+                        class="btn btn-primary btn-sm " role="button">Edit</a>
+                        {% if forloop.first %}
                         <a href="{% url 'PostReply' object.board.id object.id %}" class="btn btn-primary btn-sm" role="button">Reply</a>
+                        <a href="{% url 'IssueDel' object.board.id object.id %}"
+                        class="btn btn-primary btn-sm " role="button">Delete</a>
+                        {% else %}
+                        <a href="{% url 'PostReplyDel' post.issue.board.pk post.issue.pk post.pk %}"
+                        class="btn btn-primary btn-sm " role="button">Delete</a>
+                        {% endif %}
                     </div>
                     
                 </div>
                 
                 {{ post.message|safe }}
-                <!-- {% if post.created_by == user %} -->
-            
-                    
-                <!-- {% endif %} --> 
+
                 
                              
             </div>

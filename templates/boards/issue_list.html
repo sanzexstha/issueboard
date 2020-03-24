@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ object.name|title }} Topics | {{ block.super }}{% endblock title %}
+{% block title %}{{ object.name|title }} Issues | {{ block.super }}{% endblock title %}
 
 {% block breadcrumb %}
 <ol class="breadcrumb my-4">
@@ -20,18 +20,16 @@
             <th>Issues</th>
             <th>Posted by</th>
             <th>Replies</th>
-            <th>Views</th>
-            <th>Last Update</th>
-        </tr>
+          </tr>
     </thead>
     <tbody>
         {% for issue in object_list %}
         <tr>    
-            <td><a href="{% url 'TopicPosts' pk=board.id issue_pk=issue.id %}">{{ issue.subject }}</a></td>
+            <td><a href="{% url 'IssuePosts' pk=board.id issue_pk=issue.id %}">{{ issue.subject }}</a></td>
             <td>{{ issue.starter.username }}</td>
             <td>{{ issue.get_reply_count }}</td>
-            <td>{{ issue.views }}</td>
-            <td>{{ issue.last_updated }}</td>
+            <!-- <td>{{ issue.views }}</td>
+            <td>{{ issue.last_updated }}</td> -->
         </tr>
         {% endfor %}
     </tbody>

@@ -2,15 +2,15 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %}Post a reply{% endblock %}
+{% block title %}Update Post{% endblock %}
 
 {% block breadcrumb %}
 <ol class="breadcrumb my-4">
     <li class="breadcrumb-item"><a href="{% url 'BoardList' %}">Boards</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'TopicList' post.topic.board.pk %}">{{ post.topic.board.name }}</a>
+    <li class="breadcrumb-item"><a href="{% url 'IssueList' post.issue.board.pk %}">{{ post.issue.board.name }}</a>
     </li>
     <li class="breadcrumb-item"><a
-            href="{% url 'TopicPosts' post.topic.board.pk post.topic.pk %}">{{ post.topic.subject }}</a></li>
+            href="{% url 'IssuePosts' post.issue.board.pk post.issue.pk %}">{{ post.issue.subject }}</a></li>
     <li class="breadcrumb-item active">Update</li>
 </ol>
 {% endblock %}

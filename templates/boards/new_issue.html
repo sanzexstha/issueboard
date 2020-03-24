@@ -5,7 +5,7 @@
 {% block breadcrumb %}
 <ol class="breadcrumb my-4">
     <li class="breadcrumb-item"><a href="{% url 'BoardList' %}">Boards</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'TopicList' board.id %}">{{ board.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'IssueList' board.id %}">{{ board.name }}</a></li>
     <li class="breadcrumb-item active">New Issue</li>
 </ol>
 {% endblock %}

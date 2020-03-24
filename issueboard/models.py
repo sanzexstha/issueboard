@@ -13,7 +13,7 @@ class Board(models.Model):
     def get_posts_count(self):
         return Post.objects.filter(issue__board=self).count()
         
-    def get_topic_count(self):
+    def get_issue_count(self):
         return Issue.objects.filter(board=self).count()
 
     def get_last_post(self):
@@ -27,6 +27,9 @@ class Issue(models.Model):
     starter = models.ForeignKey(User, related_name='issues', on_delete=models.CASCADE)
     views = models.PositiveIntegerField(default=0)
 
+    def get_reply_count(self): 
+        return Post.objects.filter(issue=self).count()-1
+         
     def __str__(self):
         return self.subject
 

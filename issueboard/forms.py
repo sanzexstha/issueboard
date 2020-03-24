@@ -3,7 +3,7 @@ from .models import Issue, Post
 from ckeditor.widgets import CKEditorWidget
 
 
-class TopicCreateForm(forms.Form):
+class IssueCreateForm(forms.Form):
     issue = forms.CharField(label="Subject", label_suffix="", widget=forms.TextInput(
         attrs={"class": "form-control", 'placeholder': "Enter Subject"}))
     message = forms.CharField(

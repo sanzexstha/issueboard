@@ -5,4 +5,4 @@ from django.contrib.auth.models import User
 
 admin.site.register([Post, Issue, Board])
 
-# Register your models here.
+ 

@@ -26,16 +26,17 @@
         {% for board in object_list %}
         <tr>
             <td>
-                <a href="{% url 'TopicList' pk=board.id %}">{{ board.name }}</a>
+                <a href="{% url 'IssueList' pk=board.id %}">{{ board.name }}</a>
                 <small class="text-muted d-block">{{ board.description }}</small>
             </td>
+            <td class="align-middle">{{ board.get_issue_count }}</td>
+
             <td class="align-middle">{{ board.get_posts_count }}</td>
-            <td class="align-middle">{{ board.get_topic_count }}</td>
             <td>
                 {% with post=board.get_last_post %}
                 {% if post %}
                 <small>
-                    <a href="{% url 'TopicPosts' board.pk post.issue.pk %}">
+                    <a href="{% url 'IssuePosts' board.pk post.issue.pk %}">
                         By {{ post.created_by.username }} at {{ post.created_at|timesince }} ago
                     </a>
                 </small>
