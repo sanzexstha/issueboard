@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.views.generic import ListView, DetailView, FormView, UpdateView, CreateView, DeleteView
 from .forms import IssueCreateForm, PostCreateForm, BoardCreateForm
 from .models import Board, Issue, Post
+from django.contrib.auth.mixins import LoginRequiredMixin
  
 
 
@@ -26,6 +27,7 @@ class IssueListView(ListView):
         queryset = Issue.objects.filter(board__id=self.kwargs['pk'])
         return queryset
 
+
 class BoardCreateView(FormView):
     form_class = BoardCreateForm
     template_name = "boards/new_board.html"
@@ -38,9 +40,7 @@ class BoardCreateView(FormView):
         return redirect('BoardList')
 
 
-
-
-class IssueCreateView(FormView):
+class IssueCreateView(LoginRequiredMixin,FormView):
     form_class = IssueCreateForm
     template_name = "boards/new_issue.html"
 
@@ -60,7 +60,7 @@ class IssueCreateView(FormView):
         return context
 
 
-class IssuePostsView(DetailView):
+class IssuePostsView(LoginRequiredMixin, DetailView):
     model = Issue
     template_name = "boards/issue_posts.html"
 
@@ -69,7 +69,7 @@ class IssuePostsView(DetailView):
             Issue, board__pk=self.kwargs['pk'], pk=self.kwargs['issue_pk'])
         return self.issue
 
-class PostDelView(DeleteView):
+class PostDelView(LoginRequiredMixin, DeleteView):
     model = Post
     pk_url_kwarg = 'post_pk'
     context_object_name = 'post'
@@ -77,10 +77,10 @@ class PostDelView(DeleteView):
 
 
     def get_success_url(self, **kwargs):
-        
         return reverse_lazy('IssuePosts', kwargs={'pk': self.kwargs['pk'], 'issue_pk': self.kwargs['issue_pk']})
 
-class IssueDelView(DeleteView):
+
+class IssueDelView(LoginRequiredMixin, DeleteView):
     model = Issue
     pk_url_kwarg = 'issue_pk'
     context_object_name = 'issue'
@@ -90,7 +90,7 @@ class IssueDelView(DeleteView):
     def get_success_url(self, **kwargs):     
         return reverse_lazy('IssueList', kwargs={'pk': self.kwargs['pk']})
 
-class IssueUpdateView(UpdateView):
+class IssueUpdateView(LoginRequiredMixin, UpdateView):
     model = Issue
     form_class = IssueCreateForm
     pk_url_kwarg = 'issue_pk'
@@ -109,12 +109,11 @@ class IssueUpdateView(UpdateView):
 
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostCreateForm
     pk_url_kwarg = 'post_pk'
     template_name = "boards/update_posts.html"
-
 
 
     def form_valid(self, form):
@@ -124,7 +123,8 @@ class PostUpdateView(UpdateView):
         post.save()
         return redirect('IssuePosts', pk=post.issue.board.pk, issue_pk=post.issue.pk)
 
-class PostReplyView(CreateView):
+
+class PostReplyView(LoginRequiredMixin, CreateView):
     template_name = "boards/reply_issue.html"
     form_class = PostCreateForm
 
